@@ -1,0 +1,16 @@
+{
+  "name": "keumkwang-saeum-api-server",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "server": "nodemon app.js",
+    "dev": "concurrently --kill-others-on-fail \"yarn server"
+  },
+  "dependencies": {
+    "crypto": "^1.0.1",
+    "knex": "^1.0.1",
+    "lodash": "^4.17.21",
+    "mysql": "^2.18.1",
+    "uuid": "^8.3.2"
+  }
+}

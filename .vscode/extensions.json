@@ -1,0 +1,24 @@
+{
+  "recommendations": [
+    "msjsdiag.debugger-for-chrome",
+    "dbaemuer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "christian-kohler.npm-intellisense",
+    "herrmannplatz.npm-dependency-links",
+    "irongeek.vscode-env",
+    "coenraads.bracket-pair-colorizer",
+    "chrisbibby.hide-node-modules",
+    "wix.vscode-import-cost",
+    "hoovercj.vscode-power-mode",
+    "eamodio.gitlens",
+    "pkief.material-icon-theme",
+    "clinyong.vscode-css-modules",
+    "formulahendry.auto-rename-tag",
+    "chakrounanas.turbo-console-log",
+    "visualstudioexptteam.vscodeintellicode",
+    "aaron-bond.better-comments",
+    "streetsideofware.code-spell-checker",
+    "adpyke.codesnap",
+    "andrew-codes.cypress-snippets"
+  ]
+}
