@@ -40,11 +40,12 @@ const errorResponse = (code, message) => {
 
 exports.handler = async (event) => {
     try {
-        const { name, limit } = event.queryStringParameters ? event.queryStringParameters : {};
+        const { name, department, limit, is_admin } = event.queryStringParameters ? event.queryStringParameters : {};
         
         const query = knex('user');
         if (!_.isEmpty(name)) query.whereRaw('`user`.`name` like' + ` '%${name}%' ` + 'COLLATE utf8mb4_unicode_ci');
-        if (!_.isEmpty(limit) && _.isNumber(limit)) query.limit(limit);
+        if (!_.isEmpty(department)) query.whereRaw('`user`.`department` =' + ` '${department}' ` + 'COLLATE utf8mb4_unicode_ci');
+        if ((!is_admin || is_admin === 'false')&& !_.isEmpty(limit)) query.limit(limit);
 
         const users = await query
             .select(
