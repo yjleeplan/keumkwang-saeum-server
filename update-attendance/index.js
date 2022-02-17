@@ -20,6 +20,38 @@ const generateId = () => {
     return crypto.createHash('sha1').update(uuid()).digest('hex');
 };
 
+const daylist = [
+    'day1',
+    'day2',
+    'day3',
+    'day4',
+    'day5',
+    'day6',
+    'day7',
+    'day8',
+    'day9',
+    'day10',
+    'day11',
+    'day12',
+];
+
+const dayFormatter = (selectedDay) => {
+    return {
+        day1: 14,
+        day2: 15,
+        day3: 16,
+        day4: 17,
+        day5: 18,
+        day6: 19,
+        day7: 21,
+        day8: 22,
+        day9: 23,
+        day10: 24,
+        day11: 25,
+        day12: 26,
+    }[selectedDay];
+};
+
 const okResponse = (data) => {
     return {
         statusCode: 200,
@@ -49,18 +81,22 @@ exports.handler = async (event) => {
         const { attendance_id: id } = event.pathParameters ? event.pathParameters : {};
         if (_.isEmpty(id)) return errorResponse(401, '요청값이 누락되었습니다.');
 
-        const dataForUpdate = JSON.parse(event.body);
-        if (_.isEmpty(dataForUpdate)) return errorResponse(400, '변경할 정보를 입력해주세요.');
+        const parsedBody = JSON.parse(event.body);
+        const isAdmin = parsedBody.is_admin;
+        const pickedDay = _.pick(parsedBody, daylist);
+        if (_.isEmpty(pickedDay)) return errorResponse(400, '변경할 정보를 입력해주세요.');
 
         const existAttendance = await knex('attendance').select().where({ id }).then(res => res[0]);
         if (_.isEmpty(existAttendance)) return errorResponse(404, '출석 정보를 찾지 못했습니다.');
         const existUser = await knex('user').select().where({ id: existAttendance.user_id }).then(res => res[0]);
         if (_.isEmpty(existUser)) return errorResponse(404, '사용자를 찾지 못했습니다.');
 
+        if (!isAdmin && _.values(pickedDay)[0] === 'B' && _.includes(_.values(existAttendance), 'B')) return errorResponse(403, '수요예배 출석체크는 한번만 가능합니다.');
+
         await knex.transaction(async (trx) => {
             try {
                 await knex('attendance').transacting(trx).update({
-                    ...dataForUpdate,
+                    ...pickedDay,
                     updated_at: new Date(),
                 }).where({ id });
                 await knex('history').transacting(trx).insert({
@@ -68,7 +104,7 @@ exports.handler = async (event) => {
                     grantor_id: existUser.id,
                     grantor_name: existUser.name,
                     action: 'update_attendance',
-                    details: JSON.stringify(dataForUpdate),
+                    details: JSON.stringify(pickedDay),
                     grantee_id: existUser.id,
                     grantee_name: existUser.name,
                 });
