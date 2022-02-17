@@ -35,23 +35,6 @@ const daylist = [
     'day12',
 ];
 
-const dayFormatter = (selectedDay) => {
-    return {
-        day1: 14,
-        day2: 15,
-        day3: 16,
-        day4: 17,
-        day5: 18,
-        day6: 19,
-        day7: 21,
-        day8: 22,
-        day9: 23,
-        day10: 24,
-        day11: 25,
-        day12: 26,
-    }[selectedDay];
-};
-
 const okResponse = (data) => {
     return {
         statusCode: 200,
