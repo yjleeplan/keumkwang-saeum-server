@@ -42,13 +42,15 @@ exports.handler = async (event) => {
     try {
         const { offset, limit } = event.queryStringParameters ? event.queryStringParameters : {};
         
+        const total = await knex('comment').count('id as count');
+        
         const query = knex('comment');
-        if (!_.isEmpty(offset) && _.isNumber(offset)) query.offset(offset);
-        if (!_.isEmpty(limit) && _.isNumber(limit)) query.limit(limit);
+        if (!_.isEmpty(offset)) query.offset(parseInt(offset));
+        if (!_.isEmpty(limit)) query.limit(parseInt(limit));
 
         const comments = await query.select().orderBy('created_at', 'desc');
 
-        return okResponse(comments);
+        return okResponse({total: total[0].count, items: comments});
     } catch (error) {
         return errorResponse(500, '서버 에러');
     }
